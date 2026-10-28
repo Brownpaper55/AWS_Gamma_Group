@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/*
+  BRAND COLORS & FONT
+  Use these in any page, e.g. className="bg-brand-600 text-white"
+  To change the look of the whole app, change the values here.
+*/
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Main blue-purple used for buttons and links */
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #e0e4ff;
+  --color-brand-200: #c3c9fb;
+  --color-brand-500: #5b5fe8;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4038c7;
+
+  /* Dark navy for headings and the footer */
+  --color-navy: #0f1f3d;
+  --color-navy-footer: #1b2a4a;
+
+  /* Teal for the logo and positive accents */
+  --color-teal: #2bb3a3;
+
+  /* Page background and soft panels */
+  --color-surface: #f4f7fe;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-navy);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
