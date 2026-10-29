@@ -17,9 +17,9 @@ export const meta = { title: "Tips", path: "/tips", order: 4 };
 export default function Tips() {
   return (
     <div>
-      <PageHeader title="Tips to Manage Your Stress" subtitle="Small habits that make a difference" />
+         <PageHeader title="Tips to Manage Your Stress" subtitle="Small habits that make a difference." />
       <Placeholder>
-        {/* ===== Everything between the Placeholder tags is new ===== */}
+       
         <section className="w-full max-w-2xl rounded-2xl border border-[#e3e9f6] bg-[#f7f9fe] p-4 text-[#1b2a5c] shadow-[0_4px_18px_rgba(40,70,140,0.08)] sm:p-8">
           {/* Header */}
           <header className="mb-6 flex items-center gap-3.5">
