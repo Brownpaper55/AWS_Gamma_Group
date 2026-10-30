@@ -54,5 +54,9 @@ export function scoreStressCheck(answers) {
   return QUESTIONS.reduce((sum, q) => sum + (q.reverse ? 4 - answers[q.id] : answers[q.id]), 0);
 }
 
-// TODO (results developer): add the Low / Moderate / High cut-offs here once the team agrees them,
-// e.g. export function getStressLevel(score) { ... }
+// [Guessing] Placeholder bands (roughly equal thirds of 0-16). Agree these with the team.
+export function getStressLevel(score) {
+  if (score <= 5) return "Low";
+  if (score <= 10) return "Moderate";
+  return "High";
+}
