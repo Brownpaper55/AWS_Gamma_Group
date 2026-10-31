@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import slide1 from "../assets/images/slide 1.jpg";
+import slide2 from "../assets/images/slide 2.jpg";
+import slide3 from "../assets/images/slide 3.jpg";
 import { Link } from "react-router-dom";
 import {
   Clock,
@@ -41,15 +44,15 @@ const features = [
 ];
 const meditationImages = [
   {
-    src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=900&q=85",
+    src: slide1,
     alt: "Person meditating peacefully",
   },
   {
-    src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=900&q=85",
+    src: slide2,
     alt: "Yoga and relaxation",
   },
   {
-    src: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?w=900&q=85",
+    src: slide3,
     alt: "Peaceful wellbeing practice",
   },
 ];
@@ -71,7 +74,7 @@ export default function Home() {
       />
 
       {/* Hero section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center py-8">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center py-2">
         <div>
           <p className="text-brand-600 font-semibold mb-3">
             Take charge of your wellbeing
@@ -82,7 +85,7 @@ export default function Home() {
             <span className="text-brand-600"> Improve Your Life.</span>
           </h2>
 
-          <p className="mt-5 text-navy/70 leading-7">
+          <p className="mt-3 text-navy/70 leading-6">
             Discover how stress may be affecting you with our AI-powered
             stress prediction tool. Complete a simple assessment and receive
             insights to help you make informed decisions about your wellbeing.
@@ -90,7 +93,7 @@ export default function Home() {
 
           <Link
             to="/assessment"
-            className="inline-flex items-center gap-2 mt-7 rounded-lg bg-brand-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-brand-700"
+            className="inline-flex items-center gap-2 mt-5 rounded-lg bg-brand-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-brand-700"
           >
             Start Assessment
             <ArrowRight size={18} />
@@ -102,7 +105,7 @@ export default function Home() {
           <img
             src={meditationImages[currentImage].src}
             alt={meditationImages[currentImage].alt}
-            className="w-full max-w-md h-80 object-cover rounded-3xl shadow-lg"
+            className="w-full max-w-md h-64 object-cover rounded-3xl shadow-lg"
           />
         </div>
       </section>
