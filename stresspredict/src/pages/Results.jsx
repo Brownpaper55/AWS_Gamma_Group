@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
-  Info, RotateCcw, Smile, Compass, ShieldCheck, Sparkles, Layers, ClipboardList,
+  Info, RotateCcw, Lightbulb, ArrowRight, Smile, Compass, ShieldCheck, Sparkles, Layers, ClipboardList,
 } from "lucide-react";
 import Button from "../components/Button.jsx";
 import { QUESTIONS, MAX_SCORE, getStressLevel } from "../lib/stressCheck.js";
@@ -131,7 +131,21 @@ export default function Results() {
           })}
         </div>
 
-        <div className="mt-8 flex justify-center">
+        <Link
+          to="/tips"
+          className="group mt-8 flex items-center gap-3 rounded-xl border border-brand-100 bg-brand-50/60 p-4 text-navy transition hover:border-brand-200 hover:bg-brand-50"
+        >
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-amber-500">
+            <Lightbulb className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span className="flex-1">
+            <span className="block text-sm font-semibold">See tips to manage your stress</span>
+            <span className="block text-xs text-navy/60">Small habits that make a difference.</span>
+          </span>
+          <ArrowRight className="h-5 w-5 text-brand-600 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+        </Link>
+
+        <div className="mt-6 flex justify-center">
           <Button onClick={retake}>
             <span className="inline-flex items-center gap-2">
               <RotateCcw className="h-4 w-4" aria-hidden="true" /> Take Assessment Again
