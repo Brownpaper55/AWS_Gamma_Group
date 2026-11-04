@@ -7,7 +7,7 @@ export default function Button({ children, variant = "primary", ...props }) {
       : "bg-brand-600 text-white hover:bg-brand-700";
   return (
     <button
-      className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ${styles}`}
+      className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${styles}`}
       {...props}
     >
       {children}
