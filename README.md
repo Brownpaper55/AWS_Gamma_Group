@@ -80,7 +80,7 @@ Next time, you only need `npm run dev`.
 
 ### Releasing (team lead)
 
-When `dev` is tested and ready, open a pull request on GitHub with **base: `main`** and **compare: `dev`**, then review and merge it.
+When `dev` is tested and ready, open a pull request on GitHub with **base: `main`** and **compare: `dev`**, then review and merge it. Merging to `main` triggers GitHub Actions, which deploys the release to AWS (see [Architecture](#architecture)).
 
 ---
 
@@ -122,6 +122,30 @@ Brand colors and the font are defined in `src/index.css`. See `docs/ADDING_A_PAG
 
 ---
 
+## Architecture
+
+StressPredict is hosted on AWS. The diagram below shows how a request reaches the app, and the supporting tools the team uses around it.
+
+![StressPredict architecture](docs/architecture.png)
+
+### How a request flows
+
+1. The customer's browser connects over **HTTPS** to the internet.
+2. **CloudFront** (with our custom domain) receives every request and routes it by path:
+   - `/assets/*` goes to a **private S3 bucket**. The bucket is not public; CloudFront reads it through **Origin Access Control (OAC)**.
+   - Everything else (the default application path) goes over HTTPS to the **Application Load Balancer (ALB)**.
+3. The ALB forwards traffic to the **application target group**, which is the **EC2 application**. Auto Scaling is optional.
+
+### Supporting tools
+
+| Area | Tool | What it does |
+|------|------|--------------|
+| CI/CD | GitHub + GitHub Actions | Code goes through a pull request and review. When it is merged to `main`, GitHub Actions deploys it. |
+| Monitoring | CloudWatch | Collects metrics, logs and alarms. Alarms send notifications to the team. |
+| Project management | Trello | Tracks tasks, owners, reviews and evidence links. |
+
+---
+
 ## Project structure
 
 ```
@@ -131,7 +155,7 @@ src/
   index.css     Brand colors and font
 templates/
   PageTemplate.jsx   Copy this to start a new page
-docs/           Guides and the design prototype
+docs/           Guides, the design prototype and the architecture diagram
 ```
 
 ## Commands
@@ -146,3 +170,5 @@ docs/           Guides and the design prototype
 ## Tech
 
 React 18, Vite, Tailwind CSS v4, React Router, lucide-react.
+
+Hosting and tooling: AWS (CloudFront, S3, ALB, EC2, CloudWatch), GitHub Actions, Trello.
