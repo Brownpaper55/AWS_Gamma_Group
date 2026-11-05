@@ -101,7 +101,8 @@ export default function Results() {
   }
 
   const { score, answers } = result;
-  const level = getStressLevel(score);
+  // The level comes from the scoring service (stored with the result); recompute only for old saves.
+  const level = result.level ?? getStressLevel(score);
 
   return (
     <div className="mx-auto max-w-3xl">

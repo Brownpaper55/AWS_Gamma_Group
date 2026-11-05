@@ -1,18 +1,62 @@
-// Saves and loads the finished assessment. This is the ONE place results are stored.
-// Uses sessionStorage: it survives a page refresh, is cleared when the tab closes,
-// and the data never leaves the user's device.
-import { STRESS_CHECK_VERSION, MAX_SCORE, isComplete, scoreStressCheck } from "./stressCheck.js";
+// Scores, saves and loads the finished assessment. This is the ONE place results are stored.
+// Answers are sent to the assessment API, which scores them and stores nothing. The result is kept
+// in sessionStorage: it survives a page refresh and is cleared when the tab closes.
+// If the API is unreachable we score locally with stressCheck.js so the site keeps working.
+import {
+  STRESS_CHECK_VERSION,
+  MAX_SCORE,
+  isComplete,
+  scoreStressCheck,
+  getStressLevel,
+} from "./stressCheck.js";
 
 const KEY = "stresspredict:stress-check";
 
-// Called by the Assessment page. Returns true if saved, false if the browser blocked storage.
-export function saveAssessment(answers) {
+const API_URL = "/api/assess";
+const API_TIMEOUT_MS = 8000;
+const LEVELS = ["Low", "Moderate", "High"];
+
+// Asks the API for the score. Returns { score, maxScore, level } or null on any failure.
+async function scoreOnServer(answers) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ version: STRESS_CHECK_VERSION, answers }),
+      signal: controller.signal,
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const valid =
+      Number.isInteger(data?.score) &&
+      Number.isInteger(data?.maxScore) &&
+      data.score >= 0 &&
+      data.score <= data.maxScore &&
+      LEVELS.includes(data?.level);
+    return valid ? { score: data.score, maxScore: data.maxScore, level: data.level } : null;
+  } catch {
+    return null; // offline, timeout, HTML error page, bad JSON...
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function scoreLocally(answers) {
+  const score = scoreStressCheck(answers);
+  return { score, maxScore: MAX_SCORE, level: getStressLevel(score) };
+}
+
+// Called by the Assessment page. Resolves true if saved, false if the answers are incomplete
+// or the browser blocked storage.
+export async function submitAssessment(answers) {
   if (!isComplete(answers)) return false;
+  const result = (await scoreOnServer(answers)) ?? scoreLocally(answers);
   const data = {
     version: STRESS_CHECK_VERSION,
     answers,
-    score: scoreStressCheck(answers),
-    maxScore: MAX_SCORE,
+    ...result,
     completedAt: new Date().toISOString(),
   };
   try {

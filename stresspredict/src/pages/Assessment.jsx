@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader.jsx";
 import Button from "../components/Button.jsx";
 import { QUESTIONS, ANSWER_OPTIONS } from "../lib/stressCheck.js";
-import { saveAssessment } from "../lib/assessmentStorage.js";
+import { submitAssessment } from "../lib/assessmentStorage.js";
 
 export const meta = { title: "Assessment", path: "/assessment", order: 2 };
 
@@ -19,6 +19,7 @@ export default function Assessment() {
   const [direction, setDirection] = useState("forward"); // which way the slide animates
   const [answers, setAnswers] = useState({});
   const [saveError, setSaveError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const total = QUESTIONS.length;
   const question = QUESTIONS[step];
@@ -30,11 +31,16 @@ export default function Assessment() {
     setStep((s) => s - 1);
   }
 
-  function goNext() {
-    if (!hasAnswer) return;
+  async function goNext() {
+    if (!hasAnswer || submitting) return;
     if (isLast) {
-      // Saves answers + score in one place. The Results page loads it from there.
-      if (saveAssessment(answers)) {
+      // Scores the answers (API, with local fallback) and saves the result in one place.
+      // The Results page loads it from there.
+      setSaveError(false);
+      setSubmitting(true);
+      const saved = await submitAssessment(answers);
+      setSubmitting(false);
+      if (saved) {
         navigate("/results");
       } else {
         setSaveError(true);
@@ -100,11 +106,11 @@ export default function Assessment() {
 
         {/* Back / Next */}
         <div className="mt-8 flex items-center justify-between">
-          <Button variant="soft" onClick={goBack} disabled={step === 0}>
+          <Button variant="soft" onClick={goBack} disabled={step === 0 || submitting}>
             Back
           </Button>
-          <Button onClick={goNext} disabled={!hasAnswer}>
-            {isLast ? "See my results" : "Next"}
+          <Button onClick={goNext} disabled={!hasAnswer || submitting}>
+            {isLast ? (submitting ? "Calculating..." : "See my results") : "Next"}
           </Button>
         </div>
       </div>
