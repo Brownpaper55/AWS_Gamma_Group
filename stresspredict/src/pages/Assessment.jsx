@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader.jsx";
 import Button from "../components/Button.jsx";
 import { QUESTIONS, ANSWER_OPTIONS } from "../lib/stressCheck.js";
-import { submitAssessment } from "../lib/assessmentStorage.js";
+import { saveAssessment } from "../lib/assessmentStorage.js";
+import { predictStress } from "../lib/api.js";
 
 export const meta = { title: "Assessment", path: "/assessment", order: 2 };
 
@@ -34,13 +35,19 @@ export default function Assessment() {
   async function goNext() {
     if (!hasAnswer || submitting) return;
     if (isLast) {
-      // Scores the answers (API, with local fallback) and saves the result in one place.
-      // The Results page loads it from there.
       setSaveError(false);
       setSubmitting(true);
-      const saved = await submitAssessment(answers);
+      // Ask the backend for the score. If it is down, slow or returns something odd,
+      // serverResult stays null and saveAssessment falls back to the local scoring.
+      let serverResult = null;
+      try {
+        serverResult = await predictStress(answers);
+      } catch {
+        /* fall back to local scoring */
+      }
       setSubmitting(false);
-      if (saved) {
+      // Saves answers + score in one place. The Results page loads it from there.
+      if (saveAssessment(answers, serverResult)) {
         navigate("/results");
       } else {
         setSaveError(true);
@@ -106,7 +113,7 @@ export default function Assessment() {
 
         {/* Back / Next */}
         <div className="mt-8 flex items-center justify-between">
-          <Button variant="soft" onClick={goBack} disabled={step === 0 || submitting}>
+          <Button variant="soft" onClick={goBack} disabled={step === 0}>
             Back
           </Button>
           <Button onClick={goNext} disabled={!hasAnswer || submitting}>
