@@ -109,7 +109,7 @@ export default function About() {
         <div className="mt-4 flex items-start gap-3 rounded-xl border border-brand-100 bg-brand-50/60 p-4 text-xs text-navy/80">
           <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <p>
-            StressPredict is not a medical diagnosis and is for informational purposes only. If you
+            StressPredict is NOT a medical diagnosis and is for informational purposes only. If you
             feel overwhelmed or need professional help, please consult a healthcare provider.
           </p>
         </div>
