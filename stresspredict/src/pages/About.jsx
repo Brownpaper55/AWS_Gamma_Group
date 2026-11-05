@@ -38,7 +38,7 @@ const NOTES = [
     Icon: Lock,
     tone: "bg-rose-100 text-rose-500",
     title: "Private by design",
-    text: "Your results stay in your browser tab only and are cleared when you close it. Nothing is stored on a server.",
+    text: "Your answers are sent over an encrypted connection to be scored, and are not stored or logged. Your result stays in your browser tab only and is cleared when you close it.",
   },
 ];
 

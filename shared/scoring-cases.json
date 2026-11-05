@@ -1,0 +1,17 @@
+{
+  "_comment": "Shared test vectors. Both backend/tests and shared/check-frontend-parity.mjs read this file, so the two scoring implementations cannot drift apart silently.",
+  "version": 1,
+  "maxScore": 16,
+  "cases": [
+    { "answers": { "q1": 0, "q2": 4, "q3": 4, "q4": 0 }, "score": 0,  "level": "Low" },
+    { "answers": { "q1": 0, "q2": 0, "q3": 0, "q4": 0 }, "score": 8,  "level": "Moderate" },
+    { "answers": { "q1": 2, "q2": 2, "q3": 2, "q4": 2 }, "score": 8,  "level": "Moderate" },
+    { "answers": { "q1": 4, "q2": 0, "q3": 0, "q4": 4 }, "score": 16, "level": "High" },
+    { "answers": { "q1": 1, "q2": 3, "q3": 3, "q4": 1 }, "score": 4,  "level": "Low" },
+    { "answers": { "q1": 1, "q2": 2, "q3": 3, "q4": 1 }, "score": 5,  "level": "Low" },
+    { "answers": { "q1": 2, "q2": 2, "q3": 3, "q4": 1 }, "score": 6,  "level": "Moderate" },
+    { "answers": { "q1": 3, "q2": 2, "q3": 2, "q4": 3 }, "score": 10, "level": "Moderate" },
+    { "answers": { "q1": 3, "q2": 1, "q3": 1, "q4": 3 }, "score": 12, "level": "High" },
+    { "answers": { "q1": 2, "q2": 2, "q3": 1, "q4": 4 }, "score": 11, "level": "High" }
+  ]
+}

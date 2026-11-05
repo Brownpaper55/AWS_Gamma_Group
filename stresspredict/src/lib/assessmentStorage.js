@@ -1,17 +1,20 @@
 // Saves and loads the finished assessment. This is the ONE place results are stored.
-// Uses sessionStorage: it survives a page refresh, is cleared when the tab closes,
-// and the data never leaves the user's device.
+// Uses sessionStorage: it survives a page refresh and is cleared when the tab closes.
+// The answers are sent once to /api/predict to be scored (see lib/api.js); the backend
+// keeps no database, and the saved result lives only in this browser tab.
 import { STRESS_CHECK_VERSION, MAX_SCORE, isComplete, scoreStressCheck } from "./stressCheck.js";
 
 const KEY = "stresspredict:stress-check";
 
 // Called by the Assessment page. Returns true if saved, false if the browser blocked storage.
-export function saveAssessment(answers) {
+// serverResult is the { score, level } from the backend, or null to use the local scoring.
+export function saveAssessment(answers, serverResult = null) {
   if (!isComplete(answers)) return false;
   const data = {
     version: STRESS_CHECK_VERSION,
     answers,
-    score: scoreStressCheck(answers),
+    score: serverResult?.score ?? scoreStressCheck(answers),
+    level: serverResult?.level,
     maxScore: MAX_SCORE,
     completedAt: new Date().toISOString(),
   };

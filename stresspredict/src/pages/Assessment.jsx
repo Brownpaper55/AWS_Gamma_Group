@@ -4,6 +4,7 @@ import PageHeader from "../components/PageHeader.jsx";
 import Button from "../components/Button.jsx";
 import { QUESTIONS, ANSWER_OPTIONS } from "../lib/stressCheck.js";
 import { saveAssessment } from "../lib/assessmentStorage.js";
+import { predictStress } from "../lib/api.js";
 
 export const meta = { title: "Assessment", path: "/assessment", order: 2 };
 
@@ -19,6 +20,7 @@ export default function Assessment() {
   const [direction, setDirection] = useState("forward"); // which way the slide animates
   const [answers, setAnswers] = useState({});
   const [saveError, setSaveError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const total = QUESTIONS.length;
   const question = QUESTIONS[step];
@@ -30,11 +32,22 @@ export default function Assessment() {
     setStep((s) => s - 1);
   }
 
-  function goNext() {
-    if (!hasAnswer) return;
+  async function goNext() {
+    if (!hasAnswer || submitting) return;
     if (isLast) {
+      setSaveError(false);
+      setSubmitting(true);
+      // Ask the backend for the score. If it is down, slow or returns something odd,
+      // serverResult stays null and saveAssessment falls back to the local scoring.
+      let serverResult = null;
+      try {
+        serverResult = await predictStress(answers);
+      } catch {
+        /* fall back to local scoring */
+      }
+      setSubmitting(false);
       // Saves answers + score in one place. The Results page loads it from there.
-      if (saveAssessment(answers)) {
+      if (saveAssessment(answers, serverResult)) {
         navigate("/results");
       } else {
         setSaveError(true);
@@ -103,8 +116,8 @@ export default function Assessment() {
           <Button variant="soft" onClick={goBack} disabled={step === 0}>
             Back
           </Button>
-          <Button onClick={goNext} disabled={!hasAnswer}>
-            {isLast ? "See my results" : "Next"}
+          <Button onClick={goNext} disabled={!hasAnswer || submitting}>
+            {isLast ? (submitting ? "Calculating..." : "See my results") : "Next"}
           </Button>
         </div>
       </div>

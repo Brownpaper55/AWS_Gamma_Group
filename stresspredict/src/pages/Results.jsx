@@ -101,7 +101,8 @@ export default function Results() {
   }
 
   const { score, answers } = result;
-  const level = getStressLevel(score);
+  // Prefer the level from the backend; fall back to the local bands if it is missing.
+  const level = THEME[result.level] ? result.level : getStressLevel(score);
 
   return (
     <div className="mx-auto max-w-3xl">
