@@ -13,7 +13,7 @@ export async function predictStress(answers) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const res = await fetch("/api/predict", {
+    const res = await fetch("/api/assess", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ version: STRESS_CHECK_VERSION, answers }),
